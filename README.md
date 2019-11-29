@@ -1,4 +1,4 @@
-[![Nuget](https://img.shields.io/nuget/v/MasonryControl)](https://www.nuget.org/packages/MasonryControl/2.0.0)
+[![Nuget](https://img.shields.io/nuget/v/MasonryControl)](https://www.nuget.org/packages/MasonryControl)
 
 
 # MasonryControl (WPF)
