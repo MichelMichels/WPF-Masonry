@@ -1,3 +1,6 @@
+[![Nuget](https://img.shields.io/nuget/v/MasonryControl)](https://www.nuget.org/packages/MasonryControl/2.0.0)
+
+
 # MasonryControl (WPF)
 
 MasonryControl is a grid layout library for WPF based on `ItemsControl`.

@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>MasonryControl</id>
+    <version>2.0.0</version>
+    <title>MasonryControl</title>
+    <authors>Michel Michels</authors>
+    <owners>Michel Michels</owners>
+    <licenseUrl>https://github.com/MichelMichels/WPF-Masonry/blob/master/LICENSE.md</licenseUrl>
+    <projectUrl>https://github.com/MichelMichels/WPF-Masonry</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>A masonry grid layout control for WPF</description>
+    <releaseNotes>Added Visibility support for elements, more object oriented</releaseNotes>
+    <copyright>Copyright 2019</copyright>
+    <tags>masonry masonrycontrol wpf xaml</tags>
+  </metadata>
+</package>
