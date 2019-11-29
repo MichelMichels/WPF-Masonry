@@ -118,11 +118,16 @@ namespace Masonry
         /// <returns></returns>
         protected virtual AnimationTimeline CreateAnimation(FrameworkElement element, int newTop, int newLeft)
         {
+            if(element == null)
+            {
+                throw new ArgumentNullException(nameof(element));
+            }
+
             return new ThicknessAnimation
-                       {
-                           From = element.Margin, To = new Thickness(newLeft, newTop, 0, 0),
-                           Duration = this.AnimationDuration
-                       };
+            {
+                From = element.Margin, To = new Thickness(newLeft, newTop, 0, 0),
+                Duration = this.AnimationDuration
+            };
         }
 
         /// <summary>

@@ -2,6 +2,7 @@
 
 /*
  Copyright 2013 - 2016 Nikita Bernthaler
+ Copyright 2019 Michel Michels
  MasonryControl.cs is part of Masonry.
 
  Masonry is free software: you can redistribute it and/or modify
@@ -22,6 +23,7 @@
 
 namespace Masonry
 {
+    using Masonry.Models;
     using System;
     using System.Collections;
     using System.Collections.Generic;
@@ -34,7 +36,7 @@ namespace Masonry
     /// <summary>
     ///     The Masonry Control
     /// </summary>
-    /// <seealso cref="System.Windows.Controls.ItemsControl" />
+    /// <seealso cref="ItemsControl" />
     public class MasonryControl : ItemsControl
     {
         #region Static Fields
@@ -90,23 +92,26 @@ namespace Masonry
         /// </summary>
         public virtual void Update()
         {
-            var matrix = new List<int[]> { new[] { 0, (int)this.ActualWidth, 0 } };
-            var hMax = 0;
+            var matrix = new List<Position>
+            {
+                new Position(0, 0, (int)ActualWidth),
+            };
+
+            var maxHeight = 0;
             foreach (var child in this.Items)
             {
-                var element = child as FrameworkElement;
-                if (element != null)
+                if (child is FrameworkElement element)
                 {
-                    var size = new[]
-                                   { (int)element.ActualWidth + this.Spacing, (int)element.ActualHeight + this.Spacing };
-                    var point = this.GetAttachPoint(matrix, size[0]);
-                    matrix = this.UpdateAttachArea(matrix, point, size);
-                    hMax = Math.Max(hMax, point[1] + size[1]);
+                    var size = new Models.Size((int)element.ActualWidth + this.Spacing, (int)element.ActualHeight + this.Spacing);                   
+                    var point = GetAttachPoint(matrix, size.Width);
+
+                    matrix = UpdateAttachArea(matrix, point, size);
+                    maxHeight = Math.Max(maxHeight, (int)point.Y + size.Height);
                     this.UpdateAlignment(element);
                     var oldThickness = element.Margin;
-                    if (Math.Abs(oldThickness.Left - point[0]) > 1 || Math.Abs(oldThickness.Top - point[1]) > 1)
+                    if (Math.Abs(oldThickness.Left - (int)point.X) > 1 || Math.Abs(oldThickness.Top - (int)point.Y) > 1)
                     {
-                        this.SetPosition(element, point[1], point[0]);
+                        this.SetPosition(element, (int)point.Y, (int)point.X);
                     }
                 }
             }
@@ -117,7 +122,7 @@ namespace Masonry
         #region Methods
 
         /// <summary>
-        ///     Adds the specified object as the child of the <see cref="T:System.Windows.Controls.ItemsControl" /> object.
+        ///     Adds the specified object as the child of the <see cref="System.Windows.Controls.ItemsControl" /> object.
         /// </summary>
         /// <param name="value">The object to add as a child.</param>
         /// <exception cref="InvalidDataException">Child has to derive from FrameworkElement.</exception>
@@ -127,6 +132,7 @@ namespace Masonry
             {
                 throw new InvalidDataException("Child has to derive from FrameworkElement.");
             }
+
             base.AddChild(value);
         }
 
@@ -178,12 +184,18 @@ namespace Masonry
         }
 
         /// <summary>
-        ///     Invoked when the <see cref="P:System.Windows.Controls.ItemsControl.Items" /> property changes.
+        ///     Invoked when the <see cref="ItemsControl.Items" /> property changes.
         /// </summary>
         /// <param name="e">Information about the change.</param>
         protected override void OnItemsChanged(NotifyCollectionChangedEventArgs e)
         {
             base.OnItemsChanged(e);
+
+            if(e == null)
+            {
+                throw new ArgumentNullException(nameof(e));
+            }
+
             if (e.NewItems != null)
             {
                 foreach (var child in e.NewItems)
@@ -194,10 +206,10 @@ namespace Masonry
         }
 
         /// <summary>
-        ///     Called when the <see cref="P:System.Windows.Controls.ItemsControl.ItemsSource" /> property changes.
+        ///     Called when the <see cref="ItemsControl.ItemsSource" /> property changes.
         /// </summary>
-        /// <param name="oldValue">Old value of the <see cref="P:System.Windows.Controls.ItemsControl.ItemsSource" /> property.</param>
-        /// <param name="newValue">New value of the <see cref="P:System.Windows.Controls.ItemsControl.ItemsSource" /> property.</param>
+        /// <param name="oldValue">Old value of the <see cref="ItemsControl.ItemsSource" /> property.</param>
+        /// <param name="newValue">New value of the <see cref="ItemsControl.ItemsSource" /> property.</param>
         protected override void OnItemsSourceChanged(IEnumerable oldValue, IEnumerable newValue)
         {
             var newValueArray = newValue as object[] ?? newValue.Cast<object>().ToArray();
@@ -212,7 +224,7 @@ namespace Masonry
         }
 
         /// <summary>
-        ///     Raises the <see cref="E:System.Windows.FrameworkElement.SizeChanged" /> event, using the specified information as
+        ///     Raises the <see cref="FrameworkElement.SizeChanged" /> event, using the specified information as
         ///     part of the eventual event data.
         /// </summary>
         /// <param name="sizeInfo">Details of the old and new size involved in the change.</param>
@@ -252,51 +264,55 @@ namespace Masonry
         /// <summary>
         ///     Gets the attach point.
         /// </summary>
-        /// <param name="mtx">The MTX.</param>
+        /// <param name="matrix">The matrix.</param>
         /// <param name="width">The width.</param>
         /// <returns></returns>
-        private int[] GetAttachPoint(List<int[]> mtx, int width)
+        private Point GetAttachPoint(List<Position> matrix, int width)
         {
-            mtx.Sort(this.MatrixSortDepth);
-            var max = mtx[mtx.Count - 1][2];
-            for (int i = 0, length = mtx.Count; i < length; i++)
+            matrix.Sort(this.MatrixSortDepth);
+
+            var maxWidth = matrix.Last().Width;
+            foreach(var position in matrix)
             {
-                if (mtx[i][2] >= max)
+                if (position.Depth >= maxWidth)
                 {
                     break;
                 }
-                if (mtx[i][1] - mtx[i][0] >= width)
+                if (position.Width - position.X >= width)
                 {
-                    return new[] { mtx[i][0], mtx[i][2] };
+                    return new Point(position.X, position.Depth);
                 }
             }
-            return new[] { 0, max };
+
+            return new Point(0, maxWidth);
         }
 
         /// <summary>
         ///     Matrixes the join.
         /// </summary>
-        /// <param name="mtx">The MTX.</param>
+        /// <param name="matrix">The MTX.</param>
         /// <param name="cell">The cell.</param>
         /// <returns></returns>
-        private List<int[]> MatrixJoin(List<int[]> mtx, int[] cell)
+        private List<Position> MatrixJoin(List<Position> matrix, Position cell)
         {
-            mtx.Add(cell);
-            mtx.Sort(this.MatrixSortX);
-            var mtxJoin = new List<int[]>();
-            for (int i = 0, length = mtx.Count; i < length; i++)
+            matrix.Add(cell);
+            matrix.Sort(this.MatrixSortX);
+
+            var joinedMatrix = new List<Position>();
+            foreach(var position in matrix)
             {
-                if (mtxJoin.Count > 0 && mtxJoin[mtxJoin.Count - 1][1] == mtx[i][0]
-                    && mtxJoin[mtxJoin.Count - 1][2] == mtx[i][2])
+                if (joinedMatrix.Any() && joinedMatrix.Last().Width == position.X && joinedMatrix.Last().Depth == position.Depth)
                 {
-                    mtxJoin[mtxJoin.Count - 1][1] = mtx[i][1];
+                    var element = joinedMatrix.Last();
+                    element.Width = position.Width;            
                 }
                 else
                 {
-                    mtxJoin.Add(mtx[i]);
+                    joinedMatrix.Add(position);
                 }
             }
-            return mtxJoin;
+            
+            return joinedMatrix;
         }
 
         /// <summary>
@@ -305,9 +321,9 @@ namespace Masonry
         /// <param name="a">a.</param>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        private int MatrixSortDepth(int[] a, int[] b)
+        private int MatrixSortDepth(Position a, Position b)
         {
-            return (a[2] == b[2] && a[0] > b[0]) || a[2] > b[2] ? 1 : -1;
+            return (a.Depth == b.Depth && a.X > b.X) || a.Depth > b.Depth ? 1 : -1;
         }
 
         /// <summary>
@@ -316,9 +332,9 @@ namespace Masonry
         /// <param name="a">a.</param>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        private int MatrixSortX(int[] a, int[] b)
+        private int MatrixSortX(Position a, Position b)
         {
-            return a[0] > b[0] ? 1 : -1;
+            return a.X > b.X ? 1 : -1;
         }
 
         /// <summary>
@@ -327,17 +343,17 @@ namespace Masonry
         /// <param name="a">a.</param>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        private int[] MatrixTrimWidth(int[] a, int[] b)
+        private Position MatrixTrimWidth(Position a, Position b)
         {
-            if (a[0] >= b[0] && a[0] < b[1] || a[1] >= b[0] && a[1] < b[1])
+            if (a.X >= b.X && a.X < b.Width || a.Width >= b.X && a.Width < b.Width)
             {
-                if (a[0] >= b[0] && a[0] < b[1])
+                if (a.X >= b.X && a.X < b.Width)
                 {
-                    a[0] = b[1];
+                    a.X = b.Width;
                 }
                 else
                 {
-                    a[1] = b[0];
+                    a.Width = b.X;
                 }
             }
             return a;
@@ -346,29 +362,30 @@ namespace Masonry
         /// <summary>
         ///     Updates the attach area.
         /// </summary>
-        /// <param name="mtx">The MTX.</param>
+        /// <param name="matrix">The MTX.</param>
         /// <param name="point">The point.</param>
         /// <param name="size">The size.</param>
         /// <returns></returns>
-        private List<int[]> UpdateAttachArea(List<int[]> mtx, int[] point, int[] size)
+        private List<Position> UpdateAttachArea(List<Position> matrix, Point point, Models.Size size)
         {
-            mtx.Sort(this.MatrixSortDepth);
-            int[] cell = { point[0], point[0] + size[0], point[1] + size[1] };
-            for (int i = 0, length = mtx.Count; i < length; i++)
+            matrix.Sort(this.MatrixSortDepth);
+            var cell = new Position((int)point.X, (int)point.Y + size.Height, (int)point.X + size.Width);
+                    
+            for (int i = 0, length = matrix.Count; i < length; i++)
             {
-                if (mtx.Count - 1 >= i)
+                if (matrix.Count - 1 >= i)
                 {
-                    if (cell[0] <= mtx[i][0] && mtx[i][1] <= cell[1])
+                    if (cell.X <= matrix[i].X && matrix[i].Width <= cell.Width)
                     {
-                        mtx.RemoveAt(i);
+                        matrix.RemoveAt(i);
                     }
                     else
                     {
-                        mtx[i] = this.MatrixTrimWidth(mtx[i], cell);
+                        matrix[i] = this.MatrixTrimWidth(matrix[i], cell);
                     }
                 }
             }
-            return this.MatrixJoin(mtx, cell);
+            return MatrixJoin(matrix, cell);
         }
 
         #endregion

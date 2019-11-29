@@ -3,7 +3,8 @@ extensions: .cs .cpp .h
 #region License
 
 /*
- Copyright 2013 - %CurrentYear% Nikita Bernthaler
+ Copyright 2013 - 2016 Nikita Bernthaler
+ Copyright 2019 - %CurrentYear% Michel Michels
  %FileName% is part of %Project%.
 
  %Project% is free software: you can redistribute it and/or modify

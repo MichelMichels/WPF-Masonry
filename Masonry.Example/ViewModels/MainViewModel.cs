@@ -37,102 +37,68 @@ namespace Masonry.Example.ViewModels
     internal class MainViewModel : BindableBase
     {
         #region Fields
-
         private readonly Random random;
-
         private readonly RandomBrush randomBrush;
-
         private string amount;
-
         private ObservableCollection<FrameworkElement> elements;
-
         private string header;
-
         #endregion
 
         #region Constructors and Destructors
-
         public MainViewModel()
         {
             this.random = new Random();
             this.randomBrush = new RandomBrush();
             this.Elements = new ObservableCollection<FrameworkElement>();
-            this.AddClickCommand = new DelegateCommand(this.OnAddButtonClick);
-            this.ResetClickCommand = new DelegateCommand(this.OnResetButtonClick);
             this.Header = "Masonry Example";
             this.Amount = "5";
         }
-
         #endregion
 
         #region Public Properties
-
-        public ICommand AddClickCommand { get; private set; }
+        public ICommand AddClickCommand => new DelegateCommand(this.OnAddButtonClick);
+        public ICommand ResetClickCommand => new DelegateCommand(this.OnResetButtonClick);
 
         public string Amount
         {
-            get
-            {
-                return this.amount;
-            }
-            set
-            {
-                this.SetProperty(ref this.amount, value);
-            }
+            get => this.amount;
+            set => SetProperty(ref this.amount, value);            
         }
-
         public ObservableCollection<FrameworkElement> Elements
         {
-            get
-            {
-                return this.elements;
-            }
-            set
-            {
-                this.SetProperty(ref this.elements, value);
-            }
+            get => this.elements;
+            set => SetProperty(ref this.elements, value);            
         }
-
         public string Header
         {
-            get
-            {
-                return this.header;
-            }
-            private set
-            {
-                this.SetProperty(ref this.header, value);
-            }
+            get => this.header;
+            set => SetProperty(ref this.header, value);            
         }
-
-        public ICommand ResetClickCommand { get; private set; }
-
         #endregion
 
         #region Methods
-
         private void OnAddButtonClick()
         {
-            int amountValue;
-            if (int.TryParse(this.Amount, out amountValue))
+            if (int.TryParse(this.Amount, out int amountValue))
             {
                 for (var i = 0; i < amountValue; i++)
                 {
                     this.Elements.Add(
                         new Border
-                            {
-                                Width = 200, Height = this.random.Next(100, 300), BorderThickness = new Thickness(1),
-                                BorderBrush = Brushes.Black, Background = this.randomBrush.GetRandom()
-                            });
+                        {
+                            Width = 200,
+                            Height = this.random.Next(100, 300),
+                            BorderThickness = new Thickness(1),
+                            BorderBrush = Brushes.Black,
+                            Background = this.randomBrush.GetRandom(),                            
+                        });
                 }
             }
         }
-
         private void OnResetButtonClick()
         {
             this.Elements.Clear();
         }
-
         #endregion
     }
 }

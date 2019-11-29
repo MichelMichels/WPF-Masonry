@@ -130,6 +130,11 @@ namespace Masonry
         /// <param name="animationItem">The animation item.</param>
         protected void ClearActiveAnimations(AnimationItem animationItem)
         {
+            if(animationItem == null)
+            {
+                throw new ArgumentNullException(nameof(animationItem));
+            }
+
             foreach (var activeAnimation in this.activeAnimations.ToArray())
             {
                 if (activeAnimation.Element.Equals(animationItem.Element))
@@ -145,6 +150,11 @@ namespace Masonry
         /// <param name="animationItem">The animation item.</param>
         protected void HandleAnimationEvent(AnimationItem animationItem)
         {
+            if (animationItem == null)
+            {
+                throw new ArgumentNullException(nameof(animationItem));
+            }
+
             foreach (var a in this.activeAnimations.ToArray())
             {
                 if (a.Element.Equals(animationItem.Element))
