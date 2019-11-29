@@ -66,8 +66,8 @@ namespace Masonry
         public MasonryControl()
         {
             this.ItemsPanel = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(Grid)));
+            this.Loaded += MasonryControl_Loaded;
         }
-
         #endregion
 
         #region Public Properties
@@ -425,7 +425,15 @@ namespace Masonry
             }
         }
 
-        
+        /// <summary>
+        /// Loaded event callback for static Masonry content
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void MasonryControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            this.Update();
+        }
         #endregion
     }
 }

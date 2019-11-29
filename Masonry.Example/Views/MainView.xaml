@@ -48,8 +48,8 @@
             <ScrollViewer HorizontalScrollBarVisibility="Disabled">
                 <masonry:AnimatedMasonryControl
                     EnableElementVisibility="{Binding ElementName=cbEnableVisibility, Path=IsChecked}"
-                    ItemsSource="{Binding Elements}"
                     AnimationDuration="0:0:2" 
+                    ItemsSource="{Binding Elements}"
                     Spacing="5"
                     Background="#E3E3E3" />
             </ScrollViewer>
