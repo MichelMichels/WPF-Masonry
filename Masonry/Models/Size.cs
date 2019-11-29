@@ -9,7 +9,7 @@ namespace Masonry.Models
     /// <summary>
     /// 
     /// </summary>
-    public struct Size
+    public struct Size : IEquatable<Size>
     {
         /// <summary>
         /// 
@@ -41,8 +41,19 @@ namespace Masonry.Models
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return obj is Size other ? other.Width == Width && other.Height == Height : false;
+            return obj is Size other ? Equals(other) : false;
         }
+
+        /// <summary>
+        /// IEquatable implementation
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public bool Equals(Size other)
+        {
+            return other.Width == Width && other.Height == Height;
+        }
+
         /// <summary>
         /// 
         /// </summary>

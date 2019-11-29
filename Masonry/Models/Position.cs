@@ -49,7 +49,7 @@ namespace Masonry.Models
         /// <returns></returns>
         public override bool Equals(object obj)
         {
-            return obj is Position other ? other.X == this.X && other.Depth == this.Depth && other.Width == this.Width : false;
+            return obj is Position other ? Equals(other) : false;
         }
 
         /// <summary>
@@ -83,9 +83,14 @@ namespace Masonry.Models
             return !(left == right);
         }
 
+        /// <summary>
+        /// Equals override
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
         public bool Equals(Position other)
         {
-            throw new NotImplementedException();
+            return other.X == this.X && other.Depth == this.Depth && other.Width == this.Width;
         }
         #endregion
     }

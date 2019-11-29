@@ -367,7 +367,7 @@ namespace Masonry
         /// <param name="a">a.</param>
         /// <param name="b">The b.</param>
         /// <returns></returns>
-        private Position MatrixTrimWidth(Position a, Position b)
+        private static Position MatrixTrimWidth(Position a, Position b)
         {
             if (a.X >= b.X && a.X < b.Width || a.Width >= b.X && a.Width < b.Width)
             {
@@ -405,7 +405,7 @@ namespace Masonry
                     }
                     else
                     {
-                        matrix[i] = this.MatrixTrimWidth(matrix[i], cell);
+                        matrix[i] = MatrixTrimWidth(matrix[i], cell);
                     }
                 }
             }
