@@ -2,6 +2,7 @@
 
 /*
  Copyright 2013 - 2016 Nikita Bernthaler
+ Copyright 2019 - 2019 Michel Michels
  RandomBrush.cs is part of Masonry.Example.
 
  Masonry.Example is free software: you can redistribute it and/or modify

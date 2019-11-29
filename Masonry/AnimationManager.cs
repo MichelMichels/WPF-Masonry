@@ -2,6 +2,7 @@
 
 /*
  Copyright 2013 - 2016 Nikita Bernthaler
+ Copyright 2019 - 2019 Michel Michels
  AnimationManager.cs is part of Masonry.
 
  Masonry is free software: you can redistribute it and/or modify
