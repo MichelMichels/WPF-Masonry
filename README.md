@@ -33,6 +33,7 @@ See also the list of [contributors](https://github.com/MichelMichels/WPF-Masonry
 This project is licensed under the GNU License - see the [LICENSE.md](LICENSE.md) file for details
 
 Copyright 2013 - 2016 Nikita Bernthaler
+
 Copyright 2019 Michel Michels
 
 Masonry is free software: you can redistribute it and/or modify
