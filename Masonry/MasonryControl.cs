@@ -40,15 +40,22 @@ namespace Masonry
     public class MasonryControl : ItemsControl
     {
         #region Static Fields
-
         /// <summary>
         ///     The spacing property
         /// </summary>
         public static readonly DependencyProperty SpacingProperty = DependencyProperty.Register(
-            "Spacing",
+            nameof(Spacing),
             typeof(int),
             typeof(MasonryControl));
 
+        /// <summary>
+        /// Enables Visibility support of elements
+        /// </summary>
+        public static readonly DependencyProperty EnableElementVisibilityProperty = DependencyProperty.Register(
+            nameof(EnableElementVisibility),
+            typeof(bool),
+            typeof(MasonryControl),
+            new PropertyMetadata(OnEnableElementVisibilitiyChangedCallback));
         #endregion
 
         #region Constructors and Destructors
@@ -73,16 +80,18 @@ namespace Masonry
         /// </value>
         public int Spacing
         {
-            get
-            {
-                return (int)this.GetValue(SpacingProperty);
-            }
-            set
-            {
-                this.SetValue(SpacingProperty, value);
-            }
+            get => (int)GetValue(SpacingProperty);            
+            set => SetValue(SpacingProperty, value);
         }
 
+        /// <summary>
+        /// Gets or sets the visibility support
+        /// </summary>
+        public bool EnableElementVisibility
+        {
+            get => (bool)GetValue(EnableElementVisibilityProperty);
+            set => SetValue(EnableElementVisibilityProperty, value);
+        }
         #endregion
 
         #region Public Methods and Operators
@@ -101,7 +110,16 @@ namespace Masonry
             foreach (var child in this.Items)
             {
                 if (child is FrameworkElement element)
-                {
+                {                 
+                    if(EnableElementVisibility)
+                    {
+                        switch(element.Visibility)
+                        {
+                            case Visibility.Hidden:
+                                continue;
+                        }
+                    }
+
                     var size = new Models.Size((int)element.ActualWidth + this.Spacing, (int)element.ActualHeight + this.Spacing);                   
                     var point = GetAttachPoint(matrix, size.Width);
 
@@ -117,12 +135,16 @@ namespace Masonry
             }
         }
 
+        private void Element_IsVisibleChanged(object sender, DependencyPropertyChangedEventArgs e)
+        {            
+            Update();
+        }
         #endregion
 
         #region Methods
 
         /// <summary>
-        ///     Adds the specified object as the child of the <see cref="System.Windows.Controls.ItemsControl" /> object.
+        ///     Adds the specified object as the child of the <see cref="ItemsControl" /> object.
         /// </summary>
         /// <param name="value">The object to add as a child.</param>
         /// <exception cref="InvalidDataException">Child has to derive from FrameworkElement.</exception>
@@ -163,13 +185,15 @@ namespace Masonry
             if (element != null)
             {
                 if (element.IsLoaded)
-                {
+                {                    
                     this.Update();
                 }
                 else
                 {
                     element.Loaded += delegate { this.Update(); };
                 }
+                
+                element.IsVisibleChanged += Element_IsVisibleChanged;
             }
         }
 
@@ -388,6 +412,20 @@ namespace Masonry
             return MatrixJoin(matrix, cell);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private static void OnEnableElementVisibilitiyChangedCallback(DependencyObject sender, DependencyPropertyChangedEventArgs e)
+        {
+            if (sender is MasonryControl control)
+            {
+                control.Update();
+            }
+        }
+
+        
         #endregion
     }
 }

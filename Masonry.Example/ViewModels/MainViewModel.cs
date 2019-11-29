@@ -58,6 +58,8 @@ namespace Masonry.Example.ViewModels
         #region Public Properties
         public ICommand AddClickCommand => new DelegateCommand(this.OnAddButtonClick);
         public ICommand ResetClickCommand => new DelegateCommand(this.OnResetButtonClick);
+        public ICommand AddInvisibleElementCommand => new DelegateCommand(this.OnAddInvisibleElement);
+        public ICommand ChangeRandomElementsVisibilityCommand => new DelegateCommand(this.ChangeRandomElementsVisibility);
 
         public string Amount
         {
@@ -95,10 +97,32 @@ namespace Masonry.Example.ViewModels
                 }
             }
         }
+        private void OnAddInvisibleElement()
+        {
+            this.Elements.Add(
+                new Border
+                {
+                    Width = 200,
+                    Height = this.random.Next(100, 300),
+                    BorderThickness = new Thickness(1),
+                    BorderBrush = Brushes.Black,
+                    Background = this.randomBrush.GetRandom(),
+                    Visibility = Visibility.Hidden
+                }
+            );
+        }
         private void OnResetButtonClick()
         {
             this.Elements.Clear();
         }
+        private void ChangeRandomElementsVisibility()
+        {
+            foreach(var element in Elements)
+            {
+                element.Visibility = random.Next(0, 2) == 0 ? Visibility.Hidden : Visibility.Visible;
+            }
+        }
+
         #endregion
     }
 }
