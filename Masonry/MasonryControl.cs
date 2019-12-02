@@ -59,7 +59,6 @@ namespace Masonry
         #endregion
 
         #region Constructors and Destructors
-
         /// <summary>
         ///     Initializes a new instance of the <see cref="MasonryControl" /> class.
         /// </summary>
@@ -116,6 +115,7 @@ namespace Masonry
                         switch(element.Visibility)
                         {
                             case Visibility.Hidden:
+                            case Visibility.Collapsed:
                                 continue;
                         }
                     }

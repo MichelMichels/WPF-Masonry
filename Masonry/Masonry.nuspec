@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>MasonryControl</id>
-    <version>2.1.0</version>
+    <version>2.1.1</version>
     <title>MasonryControl</title>
     <authors>Michel Michels</authors>
     <owners>Michel Michels</owners>
@@ -10,7 +10,7 @@
     <projectUrl>https://github.com/MichelMichels/WPF-Masonry</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A masonry grid layout control for WPF</description>
-    <releaseNotes>Added Loaded event callback for static content</releaseNotes>
+    <releaseNotes>Added support for Visibility.Collapsed</releaseNotes>
     <copyright>Copyright 2019</copyright>
     <tags>masonry masonrycontrol wpf xaml</tags>
   </metadata>
