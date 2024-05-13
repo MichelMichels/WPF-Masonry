@@ -5,7 +5,7 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MichelMichels.Wpf.Controls", "src\MichelMichels.Wpf.Controls\MichelMichels.Wpf.Controls.csproj", "{F705D8F4-D560-422F-AE1D-7306046CAA96}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MichelMichels.Wpf.Controls.Demo", "MichelMichels.Wpf.Controls.Demo\MichelMichels.Wpf.Controls.Demo.csproj", "{6B4E177B-AAEE-4AD1-A577-1BFF96D59227}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MichelMichels.Wpf.Controls.Demo", "src\MichelMichels.Wpf.Controls.Demo\MichelMichels.Wpf.Controls.Demo.csproj", "{6B4E177B-AAEE-4AD1-A577-1BFF96D59227}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
