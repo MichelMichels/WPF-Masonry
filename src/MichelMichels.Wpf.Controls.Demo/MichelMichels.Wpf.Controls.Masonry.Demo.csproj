@@ -9,11 +9,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\MichelMichels.Wpf.Controls\MichelMichels.Wpf.Controls.csproj" />
+    <ProjectReference Include="..\MichelMichels.Wpf.Controls\MichelMichels.Wpf.Controls.Masonry.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageProjectUrl>https://github.com/MichelMichels/WPF-Masonry</PackageProjectUrl>
+    <PackageLicenseExpression>GPL-2.0-only</PackageLicenseExpression>
+    <Copyright>© 2024 Michel Michels</Copyright>
+    <Description>Masonry layout control for WPF</Description>
+    <RepositoryUrl>https://github.com/MichelMichels/WPF-Masonry</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>wpf, masonry, layout</PackageTags>
+    <Title>MichelMichels.Wpf.Controls.Masonry</Title>
+    <RootNamespace>MichelMichels.Wpf.Controls</RootNamespace>
+    <PackageReleaseNotes>
+      - Release 8.0.0
+      - Breaking root namespace change to MichelMichels.Wpf.Controls
+      - Update to .NET 8
+    </PackageReleaseNotes>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="" />
+  </ItemGroup>
+
+</Project>

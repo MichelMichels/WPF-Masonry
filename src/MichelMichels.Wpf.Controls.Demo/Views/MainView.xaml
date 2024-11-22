@@ -3,7 +3,7 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:common="clr-namespace:MichelMichels.Wpf.Controls.Demo.Common"
-    xmlns:masonry="clr-namespace:MichelMichels.Wpf.Controls;assembly=MichelMichels.Wpf.Controls">
+    xmlns:masonry="clr-namespace:MichelMichels.Wpf.Controls;assembly=MichelMichels.Wpf.Controls.Masonry">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="7*" />
