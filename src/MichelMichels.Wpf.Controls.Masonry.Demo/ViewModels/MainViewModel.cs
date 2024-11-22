@@ -1,12 +1,12 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MichelMichels.Wpf.Controls.Demo.Common;
+using MichelMichels.Wpf.Controls.Masonry.Demo.Common;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace MichelMichels.Wpf.Controls.Demo.ViewModels;
+namespace MichelMichels.Wpf.Controls.Masonry.Demo.ViewModels;
 
 public partial class MainViewModel : ObservableObject
 {

@@ -1,17 +1,11 @@
 ﻿namespace MichelMichels.Wpf.Controls.Models;
 
-public struct Size : IEquatable<Size>
+public struct Size(int width, int height) : IEquatable<Size>
 {
-    public Size(int width, int height)
-    {
-        Width = width;
-        Height = height;
-    }
+    public int Width { get; set; } = width;
+    public int Height { get; set; } = height;
 
-    public int Width { get; set; }
-    public int Height { get; set; }
-
-    public override bool Equals(object? obj)
+    public override readonly bool Equals(object? obj)
     {
         return obj is Size other && Equals(other);
     }

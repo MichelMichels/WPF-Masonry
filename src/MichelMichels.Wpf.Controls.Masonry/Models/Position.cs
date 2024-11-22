@@ -3,35 +3,29 @@
 /// <summary>
 /// Place struct for matrix
 /// </summary>
-public struct Position : IEquatable<Position>
+/// <remarks>
+/// Constructor
+/// </remarks>
+/// <param name="x">Coordinate X</param>
+/// <param name="depth">Coordinate Y</param>
+/// <param name="width">Width of the element</param>
+public struct Position(int x, int depth, int width) : IEquatable<Position>
 {
-    /// <summary>
-    /// Constructor
-    /// </summary>
-    /// <param name="x">Coordinate X</param>
-    /// <param name="depth">Coordinate Y</param>
-    /// <param name="width">Width of the element</param>
-    public Position(int x, int depth, int width)
-    {
-        X = x;
-        Depth = depth;
-        Width = width;
-    }
 
     /// <summary>
     /// Coordinate X
     /// </summary>
-    public int X { get; set; }
+    public int X { get; set; } = x;
 
     /// <summary>
     /// Coordinate Y
     /// </summary>
-    public int Depth { get; set; }
+    public int Depth { get; set; } = depth;
 
     /// <summary>
     /// Width of the element
     /// </summary>
-    public int Width { get; set; }
+    public int Width { get; set; } = width;
 
     /// <summary>
     /// 

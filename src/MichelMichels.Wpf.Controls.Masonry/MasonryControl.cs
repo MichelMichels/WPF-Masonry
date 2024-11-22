@@ -76,7 +76,7 @@ public class MasonryControl : ItemsControl
     {
         var matrix = new List<Position>
         {
-            new Position(0, 0, (int)ActualWidth),
+            new(0, 0, (int)ActualWidth),
         };
 
         var maxHeight = 0;
@@ -124,7 +124,7 @@ public class MasonryControl : ItemsControl
     /// <exception cref="InvalidDataException">Child has to derive from FrameworkElement.</exception>
     protected override void AddChild(object value)
     {
-        if (!(value is FrameworkElement))
+        if (value is not FrameworkElement)
         {
             throw new InvalidDataException("Child has to derive from FrameworkElement.");
         }
@@ -154,21 +154,23 @@ public class MasonryControl : ItemsControl
     ///     Handles the update.
     /// </summary>
     /// <param name="element">The element.</param>
-    protected void HandleUpdate(FrameworkElement element)
+    protected void HandleUpdate(FrameworkElement? element)
     {
-        if (element != null)
+        if (element is null)
         {
-            if (element.IsLoaded)
-            {
-                this.Update();
-            }
-            else
-            {
-                element.Loaded += delegate { this.Update(); };
-            }
-
-            element.IsVisibleChanged += Element_IsVisibleChanged;
+            return;
         }
+
+        if (element.IsLoaded)
+        {
+            this.Update();
+        }
+        else
+        {
+            element.Loaded += delegate { this.Update(); };
+        }
+
+        element.IsVisibleChanged += Element_IsVisibleChanged;
     }
 
     /// <summary>
@@ -189,10 +191,7 @@ public class MasonryControl : ItemsControl
     {
         base.OnItemsChanged(e);
 
-        if (e == null)
-        {
-            throw new ArgumentNullException(nameof(e));
-        }
+        ArgumentNullException.ThrowIfNull(e);
 
         if (e.NewItems != null)
         {
@@ -299,7 +298,7 @@ public class MasonryControl : ItemsControl
         var joinedMatrix = new List<Position>();
         foreach (var position in matrix)
         {
-            if (joinedMatrix.Any() && joinedMatrix.Last().Width == position.X && joinedMatrix.Last().Depth == position.Depth)
+            if (joinedMatrix.Count != 0 && joinedMatrix.Last().Width == position.X && joinedMatrix.Last().Depth == position.Depth)
             {
                 var element = joinedMatrix.Last();
                 element.Width = position.Width;

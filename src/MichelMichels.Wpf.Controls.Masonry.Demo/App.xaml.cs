@@ -1,8 +1,8 @@
-﻿using MichelMichels.Wpf.Controls.Demo.ViewModels;
-using MichelMichels.Wpf.Controls.Demo.Views;
+﻿using MichelMichels.Wpf.Controls.Masonry.Demo.ViewModels;
+using MichelMichels.Wpf.Controls.Masonry.Demo.Views;
 using System.Windows;
 
-namespace MichelMichels.Wpf.Controls.Demo;
+namespace MichelMichels.Wpf.Controls.Masonry.Demo;
 
 /// <summary>
 /// Interaction logic for App.xaml

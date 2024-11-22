@@ -96,10 +96,7 @@ public class AnimatedMasonryControl : MasonryControl
     /// <returns></returns>
     protected virtual AnimationTimeline CreateAnimation(FrameworkElement element, int newTop, int newLeft)
     {
-        if (element == null)
-        {
-            throw new ArgumentNullException(nameof(element));
-        }
+        ArgumentNullException.ThrowIfNull(element);
 
         return new ThicknessAnimation
         {
@@ -161,7 +158,7 @@ public class AnimatedMasonryControl : MasonryControl
     /// <param name="sender">The sender.</param>
     /// <param name="eventArgs">The <see cref="EventArgs" /> instance containing the event data.</param>
     /// <exception cref="NotImplementedException"></exception>
-    private void OnAnimationManagerCompleted(object sender, EventArgs eventArgs)
+    private void OnAnimationManagerCompleted(object? sender, EventArgs eventArgs)
     {
         if (this.requestUpdate)
         {

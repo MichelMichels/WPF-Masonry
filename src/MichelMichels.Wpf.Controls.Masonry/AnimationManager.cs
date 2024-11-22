@@ -6,52 +6,31 @@ namespace MichelMichels.Wpf.Controls;
 /// <summary>
 ///     The Animation Manager
 /// </summary>
-public class AnimationManager
+/// <remarks>
+///     Initializes a new instance of the <see cref="AnimationManager" /> class.
+/// </remarks>
+/// <param name="animationProperty">The animation property.</param>
+public class AnimationManager(DependencyProperty animationProperty)
 {
-    #region Fields
-
     /// <summary>
     ///     The active animations
     /// </summary>
-    private readonly List<AnimationItem> activeAnimations;
+    private readonly List<AnimationItem> activeAnimations = [];
 
     /// <summary>
     ///     The animation property
     /// </summary>
-    private readonly DependencyProperty animationProperty;
+    private readonly DependencyProperty animationProperty = animationProperty;
 
     /// <summary>
     ///     The animation queue
     /// </summary>
-    private readonly Queue<AnimationItem> animationQueue;
-
-    #endregion
-
-    #region Constructors and Destructors
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="AnimationManager" /> class.
-    /// </summary>
-    /// <param name="animationProperty">The animation property.</param>
-    public AnimationManager(DependencyProperty animationProperty)
-    {
-        this.animationProperty = animationProperty;
-        this.animationQueue = new Queue<AnimationItem>();
-        this.activeAnimations = new List<AnimationItem>();
-    }
-
-    #endregion
-
-    #region Public Events
+    private readonly Queue<AnimationItem> animationQueue = new();
 
     /// <summary>
     ///     Occurs when [on completed].
     /// </summary>
-    public event EventHandler OnCompleted;
-
-    #endregion
-
-    #region Public Properties
+    public event EventHandler? OnCompleted;
 
     /// <summary>
     ///     Gets a value indicating whether an animation is running.
@@ -59,11 +38,7 @@ public class AnimationManager
     /// <value>
     ///     <c>true</c> if an animation is running; otherwise, <c>false</c>.
     /// </value>
-    public bool IsRunning => this.activeAnimations.Any();
-
-    #endregion
-
-    #region Public Methods and Operators
+    public bool IsRunning => this.activeAnimations.Count != 0;
 
     /// <summary>
     ///     Enqueues the specified element.
@@ -95,20 +70,13 @@ public class AnimationManager
         }
     }
 
-    #endregion
-
-    #region Methods
-
     /// <summary>
     ///     Clears the active animations.
     /// </summary>
     /// <param name="animationItem">The animation item.</param>
     protected void ClearActiveAnimations(AnimationItem animationItem)
     {
-        if (animationItem == null)
-        {
-            throw new ArgumentNullException(nameof(animationItem));
-        }
+        ArgumentNullException.ThrowIfNull(animationItem);
 
         foreach (var activeAnimation in this.activeAnimations.ToArray())
         {
@@ -125,10 +93,7 @@ public class AnimationManager
     /// <param name="animationItem">The animation item.</param>
     protected void HandleAnimationEvent(AnimationItem animationItem)
     {
-        if (animationItem == null)
-        {
-            throw new ArgumentNullException(nameof(animationItem));
-        }
+        ArgumentNullException.ThrowIfNull(animationItem);
 
         foreach (var a in this.activeAnimations.ToArray())
         {
@@ -141,53 +106,11 @@ public class AnimationManager
         animationItem.Animation.Completed += delegate
             {
                 this.activeAnimations.Remove(animationItem);
-                if (!this.activeAnimations.Any())
+                if (this.activeAnimations.Count == 0)
                 {
                     this.OnCompleted?.Invoke(null, EventArgs.Empty);
                 }
             };
     }
-
-    #endregion
 }
 
-/// <summary>
-///     The Animation Item
-/// </summary>
-public class AnimationItem
-{
-    #region Constructors and Destructors
-
-    /// <summary>
-    ///     Initializes a new instance of the <see cref="AnimationItem" /> class.
-    /// </summary>
-    /// <param name="element">The element.</param>
-    /// <param name="animation">The animation.</param>
-    public AnimationItem(FrameworkElement element, AnimationTimeline animation)
-    {
-        this.Element = element;
-        this.Animation = animation;
-    }
-
-    #endregion
-
-    #region Public Properties
-
-    /// <summary>
-    ///     Gets or sets the animation.
-    /// </summary>
-    /// <value>
-    ///     The animation.
-    /// </value>
-    public AnimationTimeline Animation { get; set; }
-
-    /// <summary>
-    ///     Gets or sets the element.
-    /// </summary>
-    /// <value>
-    ///     The element.
-    /// </value>
-    public FrameworkElement Element { get; set; }
-
-    #endregion
-}

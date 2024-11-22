@@ -1,7 +1,7 @@
 ﻿
 using System.Windows;
 
-namespace MichelMichels.Wpf.Controls.Demo.Views;
+namespace MichelMichels.Wpf.Controls.Masonry.Demo.Views;
 
 /// <summary>
 ///     Interaction logic for MainView.xaml

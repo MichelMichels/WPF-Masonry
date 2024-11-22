@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace MichelMichels.Wpf.Controls.Demo.Common;
+namespace MichelMichels.Wpf.Controls.Masonry.Demo.Common;
 
 public class TextBoxMaskBehavior
 {
@@ -91,15 +91,14 @@ public class TextBoxMaskBehavior
 
     private static void MaskChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var box = e.OldValue as TextBox;
-        if (box != null)
+        TextBox? box = e.OldValue as TextBox;
+        if (box is not null)
         {
             box.PreviewTextInput -= TextBoxPreviewTextInput;
             DataObject.RemovePastingHandler(box, TextBoxPastingEventHandler);
         }
 
-        var _this = d as TextBox;
-        if (_this == null)
+        if (d is not TextBox _this)
         {
             return;
         }
@@ -115,20 +114,32 @@ public class TextBoxMaskBehavior
 
     private static void MaximumValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var _this = d as TextBox;
+        if (d is not TextBox _this)
+        {
+            return;
+        }
+
         ValidateTextBox(_this);
     }
 
     private static void MinimumValueChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var _this = d as TextBox;
+        if (d is not TextBox _this)
+        {
+            return;
+        }
+
         ValidateTextBox(_this);
     }
 
     private static void TextBoxPastingEventHandler(object sender, DataObjectPastingEventArgs e)
     {
-        var _this = sender as TextBox;
-        var clipboard = e.DataObject.GetData(typeof(string)) as string;
+        if (sender is not TextBox _this)
+        {
+            return;
+        }
+
+        string? clipboard = e.DataObject.GetData(typeof(string)) as string;
         clipboard = ValidateValue(GetMask(_this), clipboard, GetMinimumValue(_this), GetMaximumValue(_this));
         if (!string.IsNullOrEmpty(clipboard))
         {
@@ -143,22 +154,25 @@ public class TextBoxMaskBehavior
 
     private static void TextBoxPreviewTextInput(object sender, TextCompositionEventArgs e)
     {
-        var _this = sender as TextBox;
-        var isValid = IsSymbolValid(GetMask(_this), e.Text);
+        if (sender is not TextBox _this)
+        {
+            return;
+        }
+
+        bool isValid = IsSymbolValid(GetMask(_this), e.Text);
         e.Handled = !isValid;
         if (isValid)
         {
             if (_this != null)
             {
-                var caret = _this.CaretIndex;
-                var text = _this.Text;
-                var textInserted = false;
-                var selectionLength = 0;
+                int caret = _this.CaretIndex;
+                string text = _this.Text;
+                bool textInserted = false;
+                int selectionLength = 0;
 
                 if (_this.SelectionLength > 0)
                 {
-                    text = text.Substring(0, _this.SelectionStart)
-                           + text.Substring(_this.SelectionStart + _this.SelectionLength);
+                    text = string.Concat(text.AsSpan(0, _this.SelectionStart), text.AsSpan(_this.SelectionStart + _this.SelectionLength));
                     caret = _this.SelectionStart;
                 }
 
@@ -174,7 +188,7 @@ public class TextBoxMaskBehavior
                             break;
                         }
 
-                        text = text.Substring(0, ind) + text.Substring(ind + 1);
+                        text = string.Concat(text.AsSpan(0, ind), text.AsSpan(ind + 1));
                         if (caret > ind)
                         {
                             caret--;
@@ -190,7 +204,7 @@ public class TextBoxMaskBehavior
                     {
                         if (caret == 1 && string.Empty + text[0] == NumberFormatInfo.CurrentInfo.NegativeSign)
                         {
-                            text = NumberFormatInfo.CurrentInfo.NegativeSign + "0" + text.Substring(1);
+                            text = string.Concat(NumberFormatInfo.CurrentInfo.NegativeSign, "0", text.AsSpan(1));
                             caret++;
                         }
                     }
@@ -223,8 +237,7 @@ public class TextBoxMaskBehavior
 
                 if (!textInserted)
                 {
-                    text = text.Substring(0, caret) + e.Text
-                           + (caret < _this.Text.Length ? text.Substring(caret) : string.Empty);
+                    text = string.Concat(text.AsSpan(0, caret), e.Text, caret < _this.Text.Length ? text[caret..] : string.Empty);
 
                     caret++;
                 }
@@ -255,7 +268,7 @@ public class TextBoxMaskBehavior
                 while (text.Length > 1 && text[0] == '0'
                        && string.Empty + text[1] != NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)
                 {
-                    text = text.Substring(1);
+                    text = text[1..];
                     if (caret > 0)
                     {
                         caret--;
@@ -266,7 +279,7 @@ public class TextBoxMaskBehavior
                        && text[1] == '0'
                        && string.Empty + text[2] != NumberFormatInfo.CurrentInfo.NumberDecimalSeparator)
                 {
-                    text = NumberFormatInfo.CurrentInfo.NegativeSign + text.Substring(2);
+                    text = string.Concat(NumberFormatInfo.CurrentInfo.NegativeSign, text.AsSpan(2));
                     if (caret > 1)
                     {
                         caret--;
@@ -310,13 +323,13 @@ public class TextBoxMaskBehavior
 
     private static void ValidateTextBox(TextBox _this)
     {
-        if (GetMask(_this) != MaskType.Any)
+        if (GetMask(_this) is not MaskType.Any)
         {
             _this.Text = ValidateValue(GetMask(_this), _this.Text, GetMinimumValue(_this), GetMaximumValue(_this));
         }
     }
 
-    private static string ValidateValue(MaskType mask, string value, double min, double max)
+    private static string ValidateValue(MaskType mask, string? value, double min, double max)
     {
         if (string.IsNullOrEmpty(value))
         {
@@ -329,8 +342,7 @@ public class TextBoxMaskBehavior
         {
             case MaskType.Integer:
                 {
-                    int val;
-                    if (int.TryParse(value, out val))
+                    if (int.TryParse(value, out int val))
                     {
                         val = (int)ValidateLimits(min, max, val);
                         return val.ToString();
@@ -340,8 +352,7 @@ public class TextBoxMaskBehavior
                 }
             case MaskType.Decimal:
                 {
-                    double val;
-                    if (double.TryParse(value, out val))
+                    if (double.TryParse(value, out double val))
                     {
                         val = ValidateLimits(min, max, val);
                         return val.ToString(CultureInfo.InvariantCulture);

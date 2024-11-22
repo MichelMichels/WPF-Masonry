@@ -2,7 +2,7 @@
 using System.Windows.Media;
 
 
-namespace MichelMichels.Wpf.Controls.Demo.Common;
+namespace MichelMichels.Wpf.Controls.Masonry.Demo.Common;
 
 public class RandomBrush
 {
@@ -12,20 +12,25 @@ public class RandomBrush
 
     public RandomBrush()
     {
-        this.random = new Random();
-        this.brushes = new List<Brush>();
+        random = new Random();
+        brushes = [];
         var props = typeof(Brushes).GetProperties(BindingFlags.Public | BindingFlags.Static);
         foreach (var propInfo in props)
         {
             if (!propInfo.Name.Contains("White") && !propInfo.Name.Contains("Gray"))
             {
-                this.brushes.Add((Brush)propInfo.GetValue(null, null));
+                if (propInfo.GetValue(null, null) is not Brush brush)
+                {
+                    continue;
+                }
+
+                brushes.Add(brush);
             }
         }
     }
 
     public Brush GetRandom()
     {
-        return this.brushes[this.random.Next(this.brushes.Count)];
+        return brushes[random.Next(brushes.Count)];
     }
 }
