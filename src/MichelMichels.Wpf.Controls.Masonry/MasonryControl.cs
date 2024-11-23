@@ -13,7 +13,6 @@ namespace MichelMichels.Wpf.Controls;
 /// <seealso cref="ItemsControl" />
 public class MasonryControl : ItemsControl
 {
-    #region Static Fields
     /// <summary>
     ///     The spacing property
     /// </summary>
@@ -30,9 +29,7 @@ public class MasonryControl : ItemsControl
         typeof(bool),
         typeof(MasonryControl),
         new PropertyMetadata(OnEnableElementVisibilitiyChangedCallback));
-    #endregion
 
-    #region Constructors and Destructors
     /// <summary>
     ///     Initializes a new instance of the <see cref="MasonryControl" /> class.
     /// </summary>
@@ -41,9 +38,6 @@ public class MasonryControl : ItemsControl
         this.ItemsPanel = new ItemsPanelTemplate(new FrameworkElementFactory(typeof(Grid)));
         this.Loaded += MasonryControl_Loaded;
     }
-    #endregion
-
-    #region Public Properties
 
     /// <summary>
     ///     Gets or sets the spacing.
@@ -65,9 +59,6 @@ public class MasonryControl : ItemsControl
         get => (bool)GetValue(IsVisibilitySupportEnabledProperty);
         set => SetValue(IsVisibilitySupportEnabledProperty, value);
     }
-    #endregion
-
-    #region Public Methods and Operators
 
     /// <summary>
     ///     Updates this instance.
@@ -113,9 +104,6 @@ public class MasonryControl : ItemsControl
     {
         Update();
     }
-    #endregion
-
-    #region Methods
 
     /// <summary>
     ///     Adds the specified object as the child of the <see cref="ItemsControl" /> object.
@@ -407,5 +395,4 @@ public class MasonryControl : ItemsControl
     {
         this.Update();
     }
-    #endregion
 }
